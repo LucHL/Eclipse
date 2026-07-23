@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class NPCControllers : MonoBehaviour, IDataPersistence
+public class NPCControllers : MonoBehaviour
 {
     [Header("NPC Info")]
     [SerializeField] private NPCIdentity identity;
@@ -18,16 +18,6 @@ public class NPCControllers : MonoBehaviour, IDataPersistence
     private float timer;
     private float currentWaitTime;
     private bool isDead = false;
-
-    public void SaveData(GameData data)
-    {
-        
-    }
-
-    public void LoadData(GameData data)
-    {
-        
-    }
 
     void Awake()
     {

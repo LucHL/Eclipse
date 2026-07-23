@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float gravity = -9.8f;
     [SerializeField] private float mouseSensitivity = 1f;
-    [SerializeField] private Transform cameraTransform;
 
     private CharacterController controller;
     private Vector2 moveInput;

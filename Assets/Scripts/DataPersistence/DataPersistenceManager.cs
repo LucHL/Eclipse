@@ -9,7 +9,7 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] private string fileName;
     [SerializeField] private bool useEncryption;
 
-    private GameData gameData;
+    private GameData gameData; // TODO faire des fichier de sauvegarde selon les besoins ex: village_Thann avec la list des npc
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
 

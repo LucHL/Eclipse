@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum RelationType
 {
@@ -64,13 +66,6 @@ public enum MilitaryStatus
     Commander
 }
 
-public enum HostilityLevel
-{
-    Peaceful,
-    Neutral,
-    Aggressive
-}
-
 public enum Race
 {
     // Peaceful
@@ -87,10 +82,10 @@ public enum Race
     Demon
 }
 
-public enum Religion
+public enum Gender
 {
-    None,
-    Vraxxisme,
+    Male,
+    Female
 }
 
 
@@ -99,16 +94,36 @@ public class NPCRelation
 {
     public string targetNPCId;
     public RelationType relationType;
-    // public int affinity;        // -100 (hate, want to kill) / +100 (love++)
 }
 
 [System.Serializable]
 public class NPCIdentity
 {
-    public string npcId;           // ID unique (ex: "npc_Claude_01")
-    public string firstName;
-    public string familyName;
-    public NPCDataSO baseData;
+    // NPC Info
+    public string npcId = null;     // ID unique (ex: "npc_Claude_01")
+    public string firstName = null;
+    public string familyName = null;
+    public int age;
+    public bool isAlive = true;
+    public Vector3 position;
+    public Vector3 rotation;
 
+    public Race race;
+    public Gender gender;
+    public string religion;
+    public MilitaryStatus militaryStatus;
+    public SocialClass socialClass;
+    public Jobs jobs;
+
+    // Village
+    public string homeVillage;   // (ex: "village_Thann")
+    public string currentVillage;
+
+    // Other NPC
     public List<NPCRelation> relations = new();
+
+    // Keep track of the family
+    public Tuple<string, string> refToParent; // T1: father id, T2: mother id
+    public string partner;
+    public List<string> refToChildrens;
 }

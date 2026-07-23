@@ -1,0 +1,38 @@
+{
+    "Religions": {
+        "Name": ["None", "Vraxxisme", "Nokotisme"],
+        "Practice": ["non religeu", "Vraxxiste", "Nokotiste"]
+    },
+    "NamePool": {
+        "Human": {
+            "MaleFirstNames": ["Claude", "Arthur", "Tristan", "Pierre", "Gaston", "Lukaka"],
+            "FemaleFirstNames": ["Berthe", "Jeanne", "Clothilde", "Margaux"],
+            "FamilyNames": ["Meunier", "Dubois", "Lefevre", "Moreau", "Tschifoutre"]
+        },
+        "Elf": {
+            "MaleFirstNames": ["Legolas", "Aerandir", "Earendil"],
+            "FemaleFirstNames": ["Arwen", "Galadriel", "Luthien"],
+            "FamilyNames": ["Featherfoot", "Moonwhisper", "Sunstrider"]
+        },
+        "Dwarf": {
+            "MaleFirstNames": ["Ragnir", "Owen"],
+            "FemaleFirstNames": [],
+            "FamilyNames": ["Keller", "Tran"]
+        },
+        "Orc": {
+            "MaleFirstNames": [],
+            "FemaleFirstNames": [],
+            "FamilyNames": []
+        },
+        "Goblin": {
+            "MaleFirstNames": [],
+            "FemaleFirstNames": [],
+            "FamilyNames": []
+        },
+        "Demon": {
+            "MaleFirstNames": [],
+            "FemaleFirstNames": [],
+            "FamilyNames": []
+        }
+    }
+}
