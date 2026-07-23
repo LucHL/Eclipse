@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpHeight = 2f;
@@ -14,6 +14,16 @@ public class PlayerController : MonoBehaviour
     private Vector2 lookInput;
     private Vector3 velocity;
     private InputManager inputManager;
+
+    public void SaveData(GameData data)
+    {
+        data.playerPosition = transform.position;
+    }
+
+    public void LoadData(GameData data)
+    {
+        transform.position = data.playerPosition;
+    }
 
     void Start()
     {

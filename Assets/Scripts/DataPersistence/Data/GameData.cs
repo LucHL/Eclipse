@@ -3,10 +3,10 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-    // all public data to save
+    public Vector3 playerPosition;
 
     public GameData()
     {
-        // define all data
+        playerPosition = new(0f, 1f, 0f);
     }
 }

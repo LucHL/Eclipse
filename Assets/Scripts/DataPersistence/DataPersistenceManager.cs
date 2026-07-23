@@ -13,7 +13,7 @@ public class DataPersistenceManager : MonoBehaviour
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
 
-    public static DataPersistenceManager instance { get; private set; }
+    public static DataPersistenceManager instance;
 
     void Awake()
     {
@@ -52,10 +52,10 @@ public class DataPersistenceManager : MonoBehaviour
         dataHandler.Save(gameData);
     }
 
-    void OnApplicationQuit()
-    {
-        SaveGame();
-    }
+    // void OnApplicationQuit()
+    // {
+    //     SaveGame();
+    // }
 
     List<IDataPersistence> FindAllDataPersistenceInScene()
     {
