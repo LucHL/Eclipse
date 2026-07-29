@@ -14,9 +14,13 @@ public class VillageConfig : MonoBehaviour
     public string villageName = "villageName";
     public List<Race> listRaceLiving = new();
 
+    [Tooltip("Religion name must be the same as in 'WorldData.json' !!!")]
+    public List<string> listReligion = new();
+
     [Header("Populations")]
     public int minPopulation = 30;
     public int maxPopulation = 50;
+    List<NPCIdentity> population = new();
 
     [Header("Jobs (%)")]
     public List<JobPercentage> jobDistribution = new();
@@ -25,37 +29,56 @@ public class VillageConfig : MonoBehaviour
     public List<Transform> spawnPoints = new();
 
     [Tooltip("Village Spawn Zone")]
-    public Collider villageBorders; 
+    public Collider villageBorders;
 
+    private WorldManager worldManagerInstance;
 
+    void Start()
+    {
+        worldManagerInstance = WorldManager.instance;
+    }
+
+    /// <summary>
+    /// Create NPC with : ID, firstName, FamilyName, Race, Gender, Religion and Job
+    /// </summary>
     public NPCIdentity CreateRandomNPC(string id)
     {
         Race race = listRaceLiving.GetRandomElementFromList();
         Gender gender = (Random.value > 0.5f) ? Gender.Male : Gender.Female;
 
-        var (firstName, familyName) = WorldManager.instance.GetRandomName(race, gender);
-        string religion = WorldManager.instance.GetRandomReligion();
+        var (firstName, familyName) = worldManagerInstance.GetRandomName(race, gender);
+
+        string religion;
+        if (listReligion == null)
+            religion = worldManagerInstance.GetRandomReligion();
+        else
+            religion = listReligion.GetRandomElementFromList();
+
+        Jobs jobs = PickRandomJob();
 
         return new NPCIdentity {
-            npcId = "npc_" + id + "_" + System.Guid.NewGuid().ToString("N").Substring(0, 8),
+            npcId = "npc_" + id + "_" + System.Guid.NewGuid().ToString("N")[..8],
             firstName = firstName,
             familyName = familyName,
             race = race,
             gender = gender,
             religion = religion,
-            jobs = PickRandomJob()
+            jobs = jobs
         };
     }
 
+    /// <summary>
+    /// Called by WorldManager/InitializeNewGameWorld
+    /// </summary>
     public List<NPCIdentity> GenerateVillage()
     {
-        List<NPCIdentity> population = new();
         int totalPopulation = Random.Range(minPopulation, maxPopulation + 1);
 
         for (int i = 0; i < totalPopulation; i++) {
-            NPCIdentity npc = CreateRandomNPC($"{i:D3}");
+            NPCIdentity npc = CreateRandomNPC($"{i:D4}");
             population.Add(npc);
         }
+        Debug.Log($"{population.Count} villageois ont été crée dans {villageName}.");
         return population;
     }
 

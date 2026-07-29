@@ -99,15 +99,20 @@ public class NPCRelation
 [System.Serializable]
 public class NPCIdentity
 {
-    // NPC Info
-    public string npcId = null;     // ID unique (ex: "npc_Claude_01")
+    [Header("Base Info")]
+    public string npcId = null;     // ID unique (ex: "npc_0001_d4ds65cs")
     public string firstName = null;
     public string familyName = null;
     public int age;
     public bool isAlive = true;
+
+    [Header("Position & World")]
     public Vector3 position;
     public Vector3 rotation;
+    public string homeVillage;   // (ex: "village_Thann")
+    public string currentVillage;
 
+    [Header("Characteristic")]
     public Race race;
     public Gender gender;
     public string religion;
@@ -115,15 +120,10 @@ public class NPCIdentity
     public SocialClass socialClass;
     public Jobs jobs;
 
-    // Village
-    public string homeVillage;   // (ex: "village_Thann")
-    public string currentVillage;
-
-    // Other NPC
-    public List<NPCRelation> relations = new();
-
-    // Keep track of the family
-    public Tuple<string, string> refToParent; // T1: father id, T2: mother id
+    [Header("Relations & Family")]
+    public string fatherId;
+    public string motherId;
     public string partner;
-    public List<string> refToChildrens;
+    public List<string> childrenIds = new();
+    public List<NPCRelation> relations = new();
 }

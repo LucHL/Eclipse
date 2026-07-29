@@ -15,26 +15,46 @@ public class NPCControllers : MonoBehaviour
     [SerializeField] private float maxWaitTime = 5f;
 
     private NavMeshAgent agent;
+    private Animator animator;
     private float timer;
     private float currentWaitTime;
     private bool isDead = false;
 
+    public NPCIdentity Identity => identity;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponentInChildren<Animator>();
     }
 
-    void Start()
+    /// <summary>
+    /// Called by VillageConfig/WorldManager
+    /// </summary>
+    public void Initialize(NPCIdentity npcIdentity)
     {
+        identity = npcIdentity;
+        isDead = !identity.isAlive;
+
+        if (isDead) {
+            Die();
+            return;
+        }
+
+        if (agent != null) {
+            agent.Warp(identity.position);
+            agent.enabled = true;
+        }
+
         SetNewDestination();
     }
 
     void Update()
     {
-        if (isDead) {
-            // gameObject.SetActive(false);
+        if (isDead || identity == null)
             return;
-        }
+
+        identity.position = transform.position;
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) {
             timer += Time.deltaTime;
@@ -43,10 +63,16 @@ public class NPCControllers : MonoBehaviour
                 timer = 0f;
             }
         }
+
+        if (animator != null && animator.enabled)
+            animator.SetFloat("Speed", agent.velocity.magnitude);
     }
 
     private void SetNewDestination()
     {
+        if (agent == null || !agent.isOnNavMesh)
+            return;
+
         Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
         randomDirection += transform.position;
 
@@ -58,14 +84,32 @@ public class NPCControllers : MonoBehaviour
 
     public void Die()
     {
-        if (isDead)
-            return;
-
         isDead = true;
 
-        if (agent != null)
+        if (identity != null)
+            identity.isAlive = false;
+
+        if (agent != null && agent.enabled)
             agent.enabled = false;
+
+        if (animator != null)
+            animator.SetTrigger("Die");
 
         enabled = false;
     }
+
+    #region Optimisation Camera (Culling)
+
+    private void OnBecameInvisible()
+    {
+        if (animator != null)
+            animator.enabled = false;
+    }
+
+    private void OnBecameVisible()
+    {
+        if (animator != null) animator.enabled = true;
+    }
+
+    #endregion
 }

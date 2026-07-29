@@ -8,8 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: 99c9720ab356a0642a771bea13969a05
+  m_OcclusionCullingData: {fileID: 36300000, guid: f8640cbe1db4d934886cbfde66abc569, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -501,10 +501,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VillageConfig
   villageName: Thann
+  listRaceLiving: 0100000000000000
+  listReligion: []
   minPopulation: 3
   maxPopulation: 5
+  jobDistribution: []
   spawnPoints: []
-  villageBounds: {fileID: 499815873}
+  villageBorders: {fileID: 0}
 --- !u!1 &730196164
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,6 +884,31 @@ MonoBehaviour:
     Religions:
       Name: []
       Practice: []
+    NamePool:
+      Human:
+        MaleFirstNames: []
+        FemaleFirstNames: []
+        FamilyNames: []
+      Elf:
+        MaleFirstNames: []
+        FemaleFirstNames: []
+        FamilyNames: []
+      Dwarf:
+        MaleFirstNames: []
+        FemaleFirstNames: []
+        FamilyNames: []
+      Orc:
+        MaleFirstNames: []
+        FemaleFirstNames: []
+        FamilyNames: []
+      Goblin:
+        MaleFirstNames: []
+        FemaleFirstNames: []
+        FamilyNames: []
+      Demon:
+        MaleFirstNames: []
+        FemaleFirstNames: []
+        FamilyNames: []
 --- !u!4 &937512082
 Transform:
   m_ObjectHideFlags: 0
@@ -1861,21 +1889,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1210947641}
     m_Modifications:
+    - target: {fileID: 1220068932631510354, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 4336007063768507260, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
       propertyPath: m_Name
       value: NPC
       objectReference: {fileID: 0}
+    - target: {fileID: 5699838894912080769, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5699838894912080769, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7153130766033601503, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 7271572264557644165, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.11861
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7271572264557644165, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.52386
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7271572264557644165, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.61542
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7271572264557644165, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1904,6 +1948,10 @@ PrefabInstance:
     - target: {fileID: 7271572264557644165, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030836537652313169, guid: 6e9d61c93f332f347aa9e8cbd4b2b063, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

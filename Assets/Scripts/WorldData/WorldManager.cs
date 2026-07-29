@@ -10,7 +10,7 @@ public class WorldManager : MonoBehaviour, IDataPersistence
     public RootDatabase database;
 
     [Header("List Village & NPC")]
-    private Dictionary<string, List<NPCIdentity>> villagesAndNPCList;
+    private Dictionary<string, List<NPCIdentity>> villagesAndNPCList = new();
 
     public void LoadData(GameData data)
     {
@@ -64,24 +64,21 @@ public class WorldManager : MonoBehaviour, IDataPersistence
             Debug.LogError("[WorldManager] Impossible de trouver 'Resources/WorldData.json'");
     }
 
-    // --- Get Info for creating NPC ---
+    // --- Get random NPC name & family name ---
 
     public (string firstName, string familyName) GetRandomName(Race race, Gender gender)
     {
         string raceKey = race.ToString();
 
-        if (database == null || !database.NamePool.TryGetValue(raceKey, out NamePoolGroup pool))
+        NamePoolGroup pool = database.NamePool.GetPoolForRace(race);
+
+        if (pool == null)
             return ("Inconnu", "");
 
         List<string> firstNamePool = (gender == Gender.Male) ? pool.MaleFirstNames : pool.FemaleFirstNames;
         
-        string firstName = (firstNamePool != null && firstNamePool.Count > 0)
-            ? firstNamePool.GetRandomElementFromList()
-            : "Inconnu";
-
-        string familyName = (pool.FamilyNames != null && pool.FamilyNames.Count > 0)
-            ? pool.FamilyNames.GetRandomElementFromList()
-            : "";
+        string firstName = firstNamePool.GetRandomElementFromList();
+        string familyName = pool.FamilyNames.GetRandomElementFromList();
 
         return (firstName, familyName);
     }
@@ -89,5 +86,11 @@ public class WorldManager : MonoBehaviour, IDataPersistence
     public string GetRandomReligion()
     {
         return database.Religions.Name.GetRandomElementFromList();
+    }
+
+    public List<NPCIdentity> GetNPCsInVillage(string villageId)
+    {
+        villagesAndNPCList.TryGetValue(villageId, out List<NPCIdentity> result);
+        return result;
     }
 }
