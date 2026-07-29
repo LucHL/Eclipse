@@ -653,14 +653,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5779cdce1fe1a54ab869e1f16dba320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterCampConfig
-  campName: Gobelin
+  zoneName: Gobelin
+  zoneFaction: 2
   listRaceLiving: 
-  factionLiving: 2
-  monsterPrefab: {fileID: 0}
-  maxMonsters: 5
-  minMonsters: 2
+  minPopulation: 2
+  maxPopulation: 5
+  populationPrefab: []
+  explicitSpawnPoints: []
+  numberOfTry: 10
   respawnCooldown: 60
-  campBounds: {fileID: 692872154}
+  folderPrefab: 
 --- !u!1 &730196164
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,6 +1097,9 @@ MonoBehaviour:
         MaleFirstNames: []
         FemaleFirstNames: []
         FamilyNames: []
+  listZone:
+  - VILLAGE
+  - MONSTER_CAMP
 --- !u!4 &937512082
 Transform:
   m_ObjectHideFlags: 0

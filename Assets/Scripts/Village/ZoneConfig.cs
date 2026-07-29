@@ -42,11 +42,6 @@ public abstract class ZoneConfig : MonoBehaviour
         worldManagerInstance = FindFirstObjectByType<WorldManager>();
     }
 
-    protected virtual void Start()
-    {
-        InitializeZoneData();
-    }
-
     public abstract List<NPCIdentity> InitializeZoneData();
 
     protected virtual NPCIdentity CreateRandomEntity(string id)

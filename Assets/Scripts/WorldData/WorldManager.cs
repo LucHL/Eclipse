@@ -8,7 +8,7 @@ public class WorldManager : MonoBehaviour, IDataPersistence
 
     [Header("Globale DB")]
     public RootDatabase database;
-    [SerializeField] private string[] listZone = {"VILLAGE", "MONSTER_CAMP"};
+    [SerializeField] private string[] listZone;
 
     [Header("List Zone & NPC")]
     private Dictionary<string, List<NPCIdentity>> zoneAndNPCList = new();
@@ -33,6 +33,8 @@ public class WorldManager : MonoBehaviour, IDataPersistence
 
         instance = this;
         LoadDatabase();
+
+        listZone = new string[] {"VILLAGES", "MONSTER_CAMP"};
     }
 
     void Start()
@@ -46,16 +48,15 @@ public class WorldManager : MonoBehaviour, IDataPersistence
             GameObject zoneParent = GameObject.Find(currentZone);
 
             if (zoneParent != null) {
-                VillageConfig[] allzone = zoneParent.GetComponentsInChildren<VillageConfig>();
+                ZoneConfig[] allzone = zoneParent.GetComponentsInChildren<ZoneConfig>();
 
                 foreach (ZoneConfig zone in allzone) {
                     zoneAndNPCList.Add(zone.zoneName, zone.InitializeZoneData());
                     listZoneConfigs.Add(zone);
                 }
-
-                Debug.Log($"[WorldManager] {allzone.Length} zone ont été initialisés dans le monde !");
             }
         }
+        Debug.Log($"[WorldManager] {listZoneConfigs.Count} zone ont été initialisés dans le monde !");
     }
 
     private void LoadDatabase()

@@ -46,6 +46,8 @@ public class MonsterCampConfig : ZoneConfig
             
             population.Add(monster);
         }
+        Debug.Log($"{population.Count} monstre ont été crée dans {zoneName}.");
+
         return population;
     }
 
