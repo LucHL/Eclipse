@@ -8,14 +8,11 @@ public class WorldManager : MonoBehaviour, IDataPersistence
 
     [Header("Globale DB")]
     public RootDatabase database;
+    [SerializeField] private string[] listZone = {"VILLAGE", "MONSTER_CAMP"};
 
-    [Header("List Village & NPC")]
-    private Dictionary<string, List<NPCIdentity>> villagesAndNPCList = new();
-    private List<VillageConfig> listVillageConfigs = new();
-
-    [Header("List Monster Camp & Monster")]
-    private Dictionary<string, List<NPCIdentity>> campAndMonsterList = new();
-    private List<MonsterCampConfig> monsterCampConfigs = new();
+    [Header("List Zone & NPC")]
+    private Dictionary<string, List<NPCIdentity>> zoneAndNPCList = new();
+    private List<ZoneConfig> listZoneConfigs = new();
 
     public void LoadData(GameData data)
     {
@@ -45,39 +42,19 @@ public class WorldManager : MonoBehaviour, IDataPersistence
 
     public void InitializeNewGameWorld()
     {
-        InitVillage();
-        InitMonsterCamp();
-    }
+        foreach (string currentZone in listZone) {
+            GameObject zoneParent = GameObject.Find(currentZone);
 
-    private void InitVillage()
-    {
-        GameObject villagesParent = GameObject.Find("VILLAGES");
-        
-        if (villagesParent != null) {
-            VillageConfig[] allVillages = villagesParent.GetComponentsInChildren<VillageConfig>();
+            if (zoneParent != null) {
+                VillageConfig[] allzone = zoneParent.GetComponentsInChildren<VillageConfig>();
 
-            foreach (VillageConfig village in allVillages) {
-                villagesAndNPCList.Add(village.villageName, village.GenerateVillage());
-                listVillageConfigs.Add(village);
+                foreach (ZoneConfig zone in allzone) {
+                    zoneAndNPCList.Add(zone.zoneName, zone.InitializeZoneData());
+                    listZoneConfigs.Add(zone);
+                }
+
+                Debug.Log($"[WorldManager] {allzone.Length} zone ont été initialisés dans le monde !");
             }
-
-            Debug.Log($"[WorldManager] {allVillages.Length} villages ont été initialisés dans le monde !");
-        }
-    }
-
-    private void InitMonsterCamp()
-    {
-        GameObject campParent = GameObject.Find("MONSTER_CAMP");
-        
-        if (campParent != null) {
-            MonsterCampConfig[] allCamp = campParent.GetComponentsInChildren<MonsterCampConfig>();
-
-            foreach (MonsterCampConfig camp in allCamp) {
-                campAndMonsterList.Add(camp.campName, camp.InitializeCampData());
-                monsterCampConfigs.Add(camp);
-            }
-
-            Debug.Log($"[WorldManager] {allCamp.Length} villages ont été initialisés dans le monde !");
         }
     }
 
@@ -116,9 +93,9 @@ public class WorldManager : MonoBehaviour, IDataPersistence
         return database.Religions.Name.GetRandomElementFromList();
     }
 
-    public List<NPCIdentity> GetNPCsInVillage(string villageId)
+    public List<NPCIdentity> GetNPCsInZone(string zoneId)
     {
-        villagesAndNPCList.TryGetValue(villageId, out List<NPCIdentity> result);
+        zoneAndNPCList.TryGetValue(zoneId, out List<NPCIdentity> result);
         return result;
     }
 }
