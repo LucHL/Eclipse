@@ -23,8 +23,14 @@ public class MeshSlicer : MonoBehaviour
 
     private void SetupPiece(GameObject piece, GameObject originalTarget)
     {
-        // piece.tag = originalTarget.tag;
-        // piece.layer = originalTarget.layer;
+        piece.tag = originalTarget.tag;
+        piece.layer = originalTarget.layer;
+
+        piece.transform.position = originalTarget.transform.position;
+        piece.transform.rotation = originalTarget.transform.rotation;
+        piece.transform.localScale = originalTarget.transform.lossyScale;
+
+        piece.transform.SetParent(null, true);
 
         MeshFilter mf = piece.GetComponent<MeshFilter>();
 
@@ -45,6 +51,8 @@ public class MeshSlicer : MonoBehaviour
         rb.useGravity = true;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-        rb.AddExplosionForce(120f, piece.transform.position, 1.5f);
+        rb.AddExplosionForce(120f, originalTarget.transform.position, 1.5f);
+
+        Destroy(piece, 10f);
     }
 }

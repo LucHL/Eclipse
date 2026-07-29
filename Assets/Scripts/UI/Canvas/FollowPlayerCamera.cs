@@ -1,18 +1,36 @@
+using TMPro;
 using UnityEngine;
 
 public class FollowPlayerCamera : MonoBehaviour
 {
-    [SerializeField] private Transform nPC;
-    private new Camera camera;
+    [Header("TextMeshPro GUI")]
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI jobText;
 
-    void Awake()
+    private Transform cameraTransform;
+    private NPCIdentity identity;
+
+    void Start()
     {
-        camera = Camera.main;
+        cameraTransform = Camera.main.transform;
+        identity = GetComponentInParent<EntityController>().identity;
+
+        if (identity.firstName != "")
+            nameText.text = $"{identity.firstName} {identity.familyName}";
+
+        jobText.text = identity.jobs.ToString();
     }
 
     void LateUpdate()
     {
-        transform.LookAt(camera.transform);
-        // transform.position = nPC.position;
+        if (identity.firstName != "")
+            nameText.text = $"{identity.firstName} {identity.familyName}";
+        else
+            nameText.text = "Iconnu";
+
+        if (cameraTransform == null)
+            return;
+
+        transform.LookAt(transform.position + cameraTransform.rotation * Vector3.forward, cameraTransform.rotation * Vector3.up);
     }
 }

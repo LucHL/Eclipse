@@ -11,6 +11,11 @@ public class WorldManager : MonoBehaviour, IDataPersistence
 
     [Header("List Village & NPC")]
     private Dictionary<string, List<NPCIdentity>> villagesAndNPCList = new();
+    private List<VillageConfig> listVillageConfigs = new();
+
+    [Header("List Monster Camp & Monster")]
+    private Dictionary<string, List<NPCIdentity>> campAndMonsterList = new();
+    private List<MonsterCampConfig> monsterCampConfigs = new();
 
     public void LoadData(GameData data)
     {
@@ -40,6 +45,12 @@ public class WorldManager : MonoBehaviour, IDataPersistence
 
     public void InitializeNewGameWorld()
     {
+        InitVillage();
+        InitMonsterCamp();
+    }
+
+    private void InitVillage()
+    {
         GameObject villagesParent = GameObject.Find("VILLAGES");
         
         if (villagesParent != null) {
@@ -47,9 +58,26 @@ public class WorldManager : MonoBehaviour, IDataPersistence
 
             foreach (VillageConfig village in allVillages) {
                 villagesAndNPCList.Add(village.villageName, village.GenerateVillage());
+                listVillageConfigs.Add(village);
             }
 
             Debug.Log($"[WorldManager] {allVillages.Length} villages ont été initialisés dans le monde !");
+        }
+    }
+
+    private void InitMonsterCamp()
+    {
+        GameObject campParent = GameObject.Find("MONSTER_CAMP");
+        
+        if (campParent != null) {
+            MonsterCampConfig[] allCamp = campParent.GetComponentsInChildren<MonsterCampConfig>();
+
+            foreach (MonsterCampConfig camp in allCamp) {
+                campAndMonsterList.Add(camp.campName, camp.InitializeCampData());
+                monsterCampConfigs.Add(camp);
+            }
+
+            Debug.Log($"[WorldManager] {allCamp.Length} villages ont été initialisés dans le monde !");
         }
     }
 

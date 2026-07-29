@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 public struct JobPercentage
@@ -11,8 +12,9 @@ public struct JobPercentage
 public class VillageConfig : MonoBehaviour
 {
     [Header("Village Info")]
-    public string villageName = "villageName";
+    public string villageName = "VillageName";
     public List<Race> listRaceLiving = new();
+    public FactionSystem.Faction factionLiving;
 
     [Tooltip("Religion name must be the same as in 'WorldData.json' !!!")]
     public List<string> listReligion = new();
@@ -21,6 +23,7 @@ public class VillageConfig : MonoBehaviour
     public int minPopulation = 30;
     public int maxPopulation = 50;
     List<NPCIdentity> population = new();
+    List<GameObject> populationPrefab = new();
 
     [Header("Jobs (%)")]
     public List<JobPercentage> jobDistribution = new();
@@ -29,13 +32,42 @@ public class VillageConfig : MonoBehaviour
     public List<Transform> spawnPoints = new();
 
     [Tooltip("Village Spawn Zone")]
-    public Collider villageBorders;
+    private BoxCollider villageBorders;
+
+    [Header("Number of try to spawn units if fail")]
+    [SerializeField] private int numberOfTry = 10;
+
+    private GameObject npcPrefab;
 
     private WorldManager worldManagerInstance;
+
+    void Awake()
+    {
+        villageBorders = GetComponent<BoxCollider>();
+        npcPrefab = Resources.Load<GameObject>("NPC");
+    }
 
     void Start()
     {
         worldManagerInstance = WorldManager.instance;
+    }
+
+    /// <summary>
+    /// Called by WorldManager/InitializeNewGameWorld
+    /// </summary>
+    public List<NPCIdentity> GenerateVillage()
+    {
+        int totalPopulation = Random.Range(minPopulation, maxPopulation + 1);
+
+        for (int i = 0; i < totalPopulation; i++) {
+            NPCIdentity npc = CreateRandomNPC($"{i:D4}");
+            population.Add(npc);
+        }
+        Debug.Log($"{population.Count} villageois ont été crée dans {villageName}.");
+
+        InstantiateAllNPCinVillage();
+
+        return population;
     }
 
     /// <summary>
@@ -61,25 +93,11 @@ public class VillageConfig : MonoBehaviour
             firstName = firstName,
             familyName = familyName,
             race = race,
+            faction = factionLiving,
             gender = gender,
             religion = religion,
             jobs = jobs
         };
-    }
-
-    /// <summary>
-    /// Called by WorldManager/InitializeNewGameWorld
-    /// </summary>
-    public List<NPCIdentity> GenerateVillage()
-    {
-        int totalPopulation = Random.Range(minPopulation, maxPopulation + 1);
-
-        for (int i = 0; i < totalPopulation; i++) {
-            NPCIdentity npc = CreateRandomNPC($"{i:D4}");
-            population.Add(npc);
-        }
-        Debug.Log($"{population.Count} villageois ont été crée dans {villageName}.");
-        return population;
     }
 
     private Jobs PickRandomJob()
@@ -105,5 +123,55 @@ public class VillageConfig : MonoBehaviour
     private void AssignJobsAndClasses(List<NPCIdentity> population)
     {
         
+    }
+
+    private Vector3 GetRandomPointInBoxCollider(BoxCollider box)
+    {
+        if (box == null)
+        {
+            return GetValidNavMeshPoint(transform.position);
+        }
+
+        Bounds bounds = box.bounds;
+
+        for (int i = 0; i < numberOfTry; i++) {
+            float randomX = Random.Range(bounds.min.x, bounds.max.x);
+            float randomZ = Random.Range(bounds.min.z, bounds.max.z);
+
+            Vector3 searchOrigin = new(randomX, bounds.center.y, randomZ);
+
+            if (NavMesh.SamplePosition(searchOrigin, out NavMeshHit hit, 20f, NavMesh.AllAreas))
+                return hit.position;
+        }
+        Debug.LogWarning($"[VillageConfig] Position aléatoire introuvable dans la zone de {gameObject.name}. Fallback sur le centre du village.");
+        return GetValidNavMeshPoint(transform.position);
+    }
+
+    private Vector3 GetValidNavMeshPoint(Vector3 origin)
+    {
+        if (NavMesh.SamplePosition(origin, out NavMeshHit hit, 50f, NavMesh.AllAreas))
+            return hit.position;
+
+        Debug.LogError($"[VillageConfig] CRITIQUE: Aucun NavMesh détecté sous le village {gameObject.name} à la position {origin} ! Check NavMesh Bake.");
+        return origin;
+    }
+
+    public void InstantiateAllNPCinVillage()
+    {
+        foreach (NPCIdentity nPC in population) {
+            nPC.position = GetRandomPointInBoxCollider(villageBorders);
+
+            GameObject npcInstance = Instantiate(npcPrefab, nPC.position, Quaternion.identity);
+
+            npcInstance.GetComponentInChildren<NPCControllers>().Initialize(nPC);
+            populationPrefab.Add(npcInstance);
+        }
+    }
+
+    public void DeleteAllNPCinVillage()
+    {
+        foreach (GameObject npcInstance in populationPrefab) {
+            Destroy(npcInstance);
+        }
     }
 }

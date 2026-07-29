@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -89,6 +88,34 @@ public enum Gender
 }
 
 
+public static class FactionSystem
+{
+    public enum Faction
+    {
+        Civilian,   // PNJ pacifiques
+        Guards,     // Can attack monster
+        Monsters, // Gobelins, Orc...
+        Bandits     // Attack civils and guards
+    }
+
+    /// <summary>
+    /// Return TRUE if the 'factionB' is hostile toward 'factionA'
+    /// </summary>
+    public static bool IsHostile(Faction factionA, Faction factionB)
+    {
+        if (factionA == factionB)
+            return false;
+
+        return factionA switch {
+            Faction.Monsters => factionB == Faction.Civilian || factionB == Faction.Guards || factionB == Faction.Bandits,
+            Faction.Guards => factionB == Faction.Monsters || factionB == Faction.Bandits,
+            Faction.Civilian => false,
+            Faction.Bandits => factionB == Faction.Civilian || factionB == Faction.Guards,
+            _ => false,
+        };
+    }
+}
+
 [System.Serializable]
 public class NPCRelation
 {
@@ -114,6 +141,7 @@ public class NPCIdentity
 
     [Header("Characteristic")]
     public Race race;
+    public FactionSystem.Faction faction;
     public Gender gender;
     public string religion;
     public MilitaryStatus militaryStatus;
