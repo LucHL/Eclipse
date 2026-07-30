@@ -118,6 +118,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack Horizontal"",
+                    ""type"": ""Button"",
+                    ""id"": ""dbac15ba-d28d-4621-8597-bd8abaf2e948"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -274,6 +283,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""10810e62-a88c-45b3-955e-92934d0580b7"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack Horizontal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -285,6 +305,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_GamePlay_Move = m_GamePlay.FindAction("Move", throwIfNotFound: true);
         m_GamePlay_Jump = m_GamePlay.FindAction("Jump", throwIfNotFound: true);
         m_GamePlay_Look = m_GamePlay.FindAction("Look", throwIfNotFound: true);
+        m_GamePlay_AttackHorizontal = m_GamePlay.FindAction("Attack Horizontal", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -368,6 +389,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlay_Move;
     private readonly InputAction m_GamePlay_Jump;
     private readonly InputAction m_GamePlay_Look;
+    private readonly InputAction m_GamePlay_AttackHorizontal;
     /// <summary>
     /// Provides access to input actions defined in input action map "GamePlay".
     /// </summary>
@@ -391,6 +413,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "GamePlay/Look".
         /// </summary>
         public InputAction @Look => m_Wrapper.m_GamePlay_Look;
+        /// <summary>
+        /// Provides access to the underlying input action "GamePlay/AttackHorizontal".
+        /// </summary>
+        public InputAction @AttackHorizontal => m_Wrapper.m_GamePlay_AttackHorizontal;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -426,6 +452,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @AttackHorizontal.started += instance.OnAttackHorizontal;
+            @AttackHorizontal.performed += instance.OnAttackHorizontal;
+            @AttackHorizontal.canceled += instance.OnAttackHorizontal;
         }
 
         /// <summary>
@@ -446,6 +475,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @AttackHorizontal.started -= instance.OnAttackHorizontal;
+            @AttackHorizontal.performed -= instance.OnAttackHorizontal;
+            @AttackHorizontal.canceled -= instance.OnAttackHorizontal;
         }
 
         /// <summary>
@@ -507,5 +539,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Attack Horizontal" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAttackHorizontal(InputAction.CallbackContext context);
     }
 }

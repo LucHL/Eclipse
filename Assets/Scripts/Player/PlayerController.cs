@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     [SerializeField] private float gravity = -9.8f;
     [SerializeField] private float mouseSensitivity = 1f;
 
+    [Header("Weapon")]
+    [SerializeField] private AWeapon currentWeapon; 
+
     private CharacterController controller;
     private Vector2 moveInput;
     private Vector2 lookInput;
@@ -46,6 +49,12 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     public void OnLook(InputAction.CallbackContext context)
     {
         lookInput = context.ReadValue<Vector2>();
+    }
+
+    private void OnAttack()
+    {
+        if (currentWeapon != null)
+            currentWeapon.Attack();
     }
 
     void Update()

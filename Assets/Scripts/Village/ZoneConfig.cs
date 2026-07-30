@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(BoxCollider))]
 public abstract class ZoneConfig : MonoBehaviour
@@ -62,15 +63,21 @@ public abstract class ZoneConfig : MonoBehaviour
 
     protected virtual void InstantiateAllEntityInZone()
     {
+        Transform npcContainer = transform.Find("NPC");
+
         foreach (NPCIdentity nPC in population) {
             nPC.position = GetRandomPointInBoxCollider(zoneBorders);
 
-            GameObject npcInstance = Instantiate(populationPrefab.GetRandomElementFromList(), nPC.position, Quaternion.identity);
+            GameObject npcInstance = Instantiate(populationPrefab.GetRandomElementFromList(), nPC.position, Quaternion.identity, npcContainer);
+
+            Vector3 parentScale = npcContainer.lossyScale;
+            npcInstance.transform.localScale = new(1f / parentScale.x, 1f / parentScale.y, 1f / parentScale.z);
 
             npcInstance.GetComponentInChildren<NPCControllers>().Initialize(nPC);
             populationPrefab.Add(npcInstance);
         }
     }
+
     protected virtual void DestroyAllEntityInZone()
     {
         foreach (GameObject npcInstance in populationPrefab) {
