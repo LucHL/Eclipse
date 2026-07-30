@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, IDataPersistence
 {
+    [Header("Player Info")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float gravity = -9.8f;
@@ -11,6 +12,13 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     [Header("Weapon")]
     [SerializeField] private AWeapon currentWeapon; 
 
+    [Header("Raycast / NPC Inspection")]
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private float interactRange = 5f;
+    private bool isBlocking = false;
+    private bool isInspecting = false;
+
+    [Tooltip("New Input System")]
     private CharacterController controller;
     private Vector2 moveInput;
     private Vector2 lookInput;
@@ -27,13 +35,20 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         transform.position = data.playerPosition;
     }
 
+    void Awake()
+    {
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+    }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
         inputManager = InputManager.instance;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        WorldManager.instance.HideCursor();
     }
+
+    #region New Input system Action
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -51,11 +66,57 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         lookInput = context.ReadValue<Vector2>();
     }
 
-    private void OnAttack()
+    public void OnAttack(InputAction.CallbackContext context)
     {
-        if (currentWeapon != null)
+        if (context.performed && currentWeapon != null)
             currentWeapon.Attack();
     }
+
+    public void OnRightClick(InputAction.CallbackContext context)
+    {
+        if (context.started) {
+            Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, interactRange, LayerMask.GetMask("Entity"))) {
+                NPCControllers npcController = hit.collider.GetComponentInParent<NPCControllers>();
+
+                if (npcController != null && npcController.identity != null) {
+                    isInspecting = true;
+                    EntityInspectorUI.instance.InspectNPC(npcController.identity, npcController.gameObject);
+                    WorldManager.instance.DisplayCursor();
+                    return;
+                }
+            }
+
+            isInspecting = false;
+            StartBlocking();
+        }
+
+        if (context.canceled) {
+            if (isBlocking)
+                StopBlocking();
+
+            isInspecting = false;
+        }
+    }
+
+    private void StartBlocking()
+    {
+        isBlocking = true;
+
+        if (currentWeapon != null)
+            currentWeapon.Blocking(isBlocking);
+    }
+
+    private void StopBlocking()
+    {
+        isBlocking = false;
+
+        if (currentWeapon != null)
+            currentWeapon.Blocking(isBlocking);
+    }
+
+    #endregion
 
     void Update()
     {

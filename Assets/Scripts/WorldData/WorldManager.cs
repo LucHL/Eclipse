@@ -89,14 +89,21 @@ public class WorldManager : MonoBehaviour, IDataPersistence
         return (firstName, familyName);
     }
 
-    public string GetRandomReligion()
-    {
-        return database.Religions.Name.GetRandomElementFromList();
-    }
-
     public List<NPCIdentity> GetNPCsInZone(string zoneId)
     {
         zoneAndNPCList.TryGetValue(zoneId, out List<NPCIdentity> result);
         return result;
+    }
+
+    public void HideCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void DisplayCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

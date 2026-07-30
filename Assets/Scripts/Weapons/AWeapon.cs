@@ -12,11 +12,12 @@ public class AWeapon : MonoBehaviour
     protected MeshSlicer slicer;
     protected Collider weaponCollider;
     protected bool isAttacking = false;
+    private bool isBlocking = false;
 
     protected virtual void Awake()
     {
         slicer = FindFirstObjectByType<MeshSlicer>();
-        weaponCollider = GetComponent<BoxCollider>();
+        weaponCollider = GetComponentInChildren<BoxCollider>();
         
         if (weaponCollider != null) {
             weaponCollider.isTrigger = true;
@@ -30,6 +31,11 @@ public class AWeapon : MonoBehaviour
 
         if (weaponAnimator != null)
             weaponAnimator.SetTrigger("Attack");
+    }
+
+    public void Blocking(bool blocking)
+    {
+        isBlocking = blocking;
     }
 
     #region Animation Events (called in animation event)
@@ -50,6 +56,9 @@ public class AWeapon : MonoBehaviour
     {
         if (weaponCollider != null)
             weaponCollider.enabled = false;
+        
+        if (weaponAnimator != null)
+            weaponAnimator.ResetTrigger("Attack");
 
         isAttacking = false;
     }

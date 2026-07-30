@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -61,9 +62,9 @@ public class VillageConfig : ZoneConfig
 
         string religion;
         if (listReligion == null)
-            religion = worldManagerInstance.GetRandomReligion();
-        else
-            religion = listReligion.GetRandomElementFromList();
+            listReligion = new(worldManagerInstance.database.Religions.Name);
+
+        religion = listReligion.GetRandomElementFromList();
 
         Jobs jobs = PickRandomJob();
 
@@ -75,7 +76,9 @@ public class VillageConfig : ZoneConfig
             faction = zoneFaction,
             gender = gender,
             religion = religion,
-            jobs = jobs
+            jobs = jobs,
+            homeVillage = zoneName,
+            currentVillage = zoneName,
         };
     }
 

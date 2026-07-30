@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 7749191143558404572}
   - component: {fileID: 4671683358871109723}
   - component: {fileID: 6816670381673024153}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Model
   m_TagString: Cuttable
   m_Icon: {fileID: 0}
