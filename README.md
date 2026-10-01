@@ -14,9 +14,9 @@ Inspired by games like *Elden Ring* and *Chivalry 2*, Eclipse blends immersive w
 | :--- | :--- | :--- |
 | **OS** | Windows 10 / 11 (64-bit) | ... |
 | **Processor** | ... | ... |
-| **Memory** | ... | ... |
+| **Memory** | 8Go | 16Go |
 | **Graphics** | ... | ... |
-| **Storage** | ... | ... |
+| **Storage** | 3Go | 10Go SDD |
 
 ---
 
@@ -37,6 +37,8 @@ Stay up to date with the latest changes, bug fixes, and feature implementations:
 ---
 
 ## Contributing
+
+First [Download](https://huggingface.co/hugging-quants/Llama-3.2-3B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-3b-instruct-q4_k_m.gguf?download=true) Ollama model and put it here : 'Assets/Streaming/AI'.
 
 Contributions, issues, and feature requests are welcome! Whether you want to fix a bug, improve combat physics, or expand world lore, here is how you can help:
 
